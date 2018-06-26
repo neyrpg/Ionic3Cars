@@ -11,16 +11,17 @@ export class HomePage {
 
   public carros:carro[];
 
-  constructor(public navCtrl: NavController, private alertCtrl: AlertController, private _carrosProvider: CarrosproviderProvider) {
+  constructor(public navCtrl: NavController, private alertCtrl: AlertController, public _carrosProvider: CarrosproviderProvider) {
     
   }
  
   ionViewDidLoad(){
-    this.carros = this._carrosProvider.listaCarros();
+   this._carrosProvider.listaCarros().subscribe((res)=>{
+      this.carros = JSON.parse(JSON.stringify(res));
+    });
   }
 
   mostraMensagem(){
-    console.log('mensagem gil')
     let alert = this.alertCtrl.create({
       title: 'Low battery',
       subTitle: '10% of battery remaining',

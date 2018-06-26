@@ -1,8 +1,11 @@
+import { carro } from './carro';
+import { HttpClient, HttpHandler, HttpClientModule } from '@angular/common/http';
+import { CarrosproviderProvider } from './../../providers/carrosprovider/carrosprovider';
 import { HomePage } from './home';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement, DebugNode } from '@angular/core';
-
+import 'rxjs/Rx';
 import { IonicModule, NavController } from 'ionic-angular/index';
 
 
@@ -11,15 +14,19 @@ describe('Pagina inicial', () => {
     let comp: HomePage;
     let fixture: ComponentFixture<HomePage>;
     let nos: DebugNode[];
+    let _service: CarrosproviderProvider;
+    let carros: carro[];
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [HomePage],
             imports: [
+                HttpClientModule,
                 IonicModule.forRoot(HomePage)
             ],
             providers: [
-                NavController
+                NavController,
+                CarrosproviderProvider
             ]
         });
     }));
@@ -28,6 +35,7 @@ describe('Pagina inicial', () => {
         fixture = TestBed.createComponent(HomePage);
         comp = fixture.componentInstance;
         de = fixture.debugElement.query(By.css('h2'));
+        _service = comp._carrosProvider;
     });
 
     it('Criando instancia do componente', () => expect(comp).toBeDefined());
@@ -39,16 +47,8 @@ describe('Pagina inicial', () => {
             '<h2>Welcome to Ionic!</h2>"');
     });
 
-    it('Deve possuir lista de carros', () => {
-        fixture.detectChanges();
-        expect(comp.carros.length).toBeGreaterThan(1);
-    })
 
-    it('Deve exibir os carros na tela', () => {
-        fixture.detectChanges();
-        de = fixture.debugElement.query(By.css('ion-item'));
-        expect(de.childNodes.length).toEqual(comp.carros.length);
-    })
+
 
     it('Não deve exibir mensagem na tela', () => {
         fixture.detectChanges();
@@ -56,7 +56,7 @@ describe('Pagina inicial', () => {
         expect(de).not.toBeTruthy();
     })
     it('Deve exibir após o clique', () => {
-        
+
         let button = fixture.debugElement.nativeElement.querySelector('button');
         button.click();
 
@@ -75,6 +75,27 @@ describe('Pagina inicial', () => {
             de = fixture.debugElement.query(By.css('ion-alert'));
             expect(de).toBeTruthy();
         })
-       
+
     })
+
+
+
+    it('Deve possuir lista de carros', () => {
+        fixture.detectChanges();
+        _service.listaCarros().subscribe((res) => {
+            comp.carros = res;
+            expect(comp.carros.length).toBe(res.length);
+        });
+
+    })
+
+    it('Deve exibir os carros na tela', async((done) => {
+        fixture.detectChanges();
+        _service.listaCarros().subscribe((res) => {
+            comp.carros = res;
+            fixture.detectChanges();
+            expect(comp.carros.length).toBe(res.length);
+        }); 
+    }))
+
 });

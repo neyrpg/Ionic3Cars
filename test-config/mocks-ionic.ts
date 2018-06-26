@@ -113,3 +113,20 @@ export class NavMock {
 export class DeepLinkerMock {
 
 }
+
+export class CarrosMock {
+  public carros = [
+    {
+      nome: "camaro",
+      valor: 200
+    },
+    {
+      nome: "Ferrari",
+      valor: 300
+    }
+  ];
+
+  listaCarros(){
+    return this.carros;
+  }
+}

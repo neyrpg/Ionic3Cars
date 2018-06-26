@@ -1,5 +1,7 @@
+import { carro } from './../../pages/home/carro';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import 'rxjs/Rx';
 
 /*
   Generated class for the CarrosproviderProvider provider.
@@ -14,11 +16,11 @@ export class CarrosproviderProvider {
     console.log('Hello CarrosproviderProvider Provider');
   }
 
-  listaCarros(){
-    return [
-      {nome: "camaro", valor: 200},
-      {nome: "camaro 2", valor: 300}
-    ];
-  }
+  listaCarros() {
+    return this.http.get<carro[]>('assets/data/carros.json');
+  } 
+
+    
+  
 
 }
