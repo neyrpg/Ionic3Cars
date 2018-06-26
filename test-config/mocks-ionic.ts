@@ -1,5 +1,8 @@
+import { carro } from './../src/pages/home/carro';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { of } from 'rxjs/observable/of';
+import { Injectable } from '@angular/core';
 
 export class PlatformMock {
   public ready(): Promise<string> {
@@ -114,19 +117,20 @@ export class DeepLinkerMock {
 
 }
 
+@Injectable()
 export class CarrosMock {
   public carros = [
     {
-      nome: "camaro",
+      nome: "camaro mock",
       valor: 200
     },
     {
-      nome: "Ferrari",
+      nome: "Ferrari mock",
       valor: 300
     }
   ];
 
   listaCarros(){
-    return this.carros;
+    return of(this.carros);
   }
 }

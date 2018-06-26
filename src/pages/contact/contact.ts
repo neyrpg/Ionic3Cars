@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
+import { CarrosproviderProvider } from '../../providers/carrosprovider/carrosprovider';
+import { carro } from '../home/carro';
 
 @Component({
   selector: 'page-contact',
@@ -7,8 +9,23 @@ import { NavController } from 'ionic-angular';
 })
 export class ContactPage {
 
-  constructor(public navCtrl: NavController) {
+  
+  public carros:carro[];
+  constructor(public navCtrl: NavController, private _carrosProvider: CarrosproviderProvider, private alertCtrl: AlertController) {
 
   }
+ionViewDidLoad(){
+  this._carrosProvider.listaCarros().subscribe((res)=>{
+    this.carros = JSON.parse(JSON.stringify(res));
+  });
+}
 
+  mostraMensagem(){
+    let alert = this.alertCtrl.create({
+      title: 'Low battery',
+      subTitle: '10% of battery remaining',
+      buttons: ['Dismiss']
+    });
+    alert.present();
+  }
 }
